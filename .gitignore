@@ -2,6 +2,7 @@
 # Edit at https://www.toptal.com/developers/gitignore?templates=Macos,WebStorm
 
 .idea
+node_modules
 ### macOS ###
 # General
 .DS_Store
