@@ -8,6 +8,7 @@ type Member = {
 */
 
 // 타입 선언 구체화 과정 필요
+/*
 class HBNU_Member {
   #memberNumber: number;
   #name: string;
@@ -129,3 +130,4 @@ student.printInfo();
 
 const postGraduateStudent = new PostGraduateStudent(4, "Lee", "010-1234-5678", "Lee@wisoft.io", "학적");
 postGraduateStudent.printInfo();
+*/
