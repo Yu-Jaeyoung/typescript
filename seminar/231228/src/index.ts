@@ -4,19 +4,15 @@ type StudentNumber = string;
 type Locate = string;
 type Rank = string;
 
-// type ProfessorPrintType = Member<ProfessorNumber> & Professor;
-// type EmployeePrintType = Member<EmployeeNumber> & Employee;
-// type StudentPrintType = Member<StudentNumber> & Student;
-// type PrintType = ProfessorPrintType | EmployeePrintType | StudentPrintType;
-type PrintType = Professor | Employee | Student;
+type PrintType<T> = Professor<T> | Employee<T> | Student<T>;
 
 const log = console.log;
 
 class Member<T> {
-  #id: T;
-  #name: string;
-  #phoneNumber: string;
-  #email: string;
+  protected id: T;
+  protected name: string;
+  protected phoneNumber: string;
+  protected email: string;
 
   constructor(
     id: T,
@@ -24,43 +20,27 @@ class Member<T> {
     phoneNumber: string,
     email: string,
   ) {
-    this.#id = id;
-    this.#name = name;
-    this.#phoneNumber = phoneNumber;
-    this.#email = email;
-  }
-
-  get id(): T {
-    return this.#id;
-  }
-
-  get name(): string {
-    return this.#name;
-  }
-
-  get phoneNumber(): string {
-    return this.#phoneNumber;
-  }
-
-  get email(): string {
-    return this.#email;
+    this.id = id;
+    this.name = name;
+    this.phoneNumber = phoneNumber;
+    this.email = email;
   }
 
   getInfo() {
     return {
-      id: this.#id,
-      name: this.#name,
-      phoneNumber: this.#phoneNumber,
-      email: this.#email,
+      id: this.id,
+      name: this.name,
+      phoneNumber: this.phoneNumber,
+      email: this.email,
     };
   }
 }
 
-class Professor extends Member<ProfessorNumber> {
+class Professor<T> extends Member<T> {
   #lab: Locate;
 
   constructor(
-    id: ProfessorNumber,
+    id: T,
     name: string,
     phoneNumber: string,
     email: string,
@@ -82,11 +62,11 @@ class Professor extends Member<ProfessorNumber> {
   }
 }
 
-class Employee extends Member<EmployeeNumber> {
+class Employee<T> extends Member<T> {
   #office: Locate;
 
   constructor(
-    id: EmployeeNumber,
+    id: T,
     name: string,
     phoneNumber: string,
     email: string,
@@ -108,11 +88,11 @@ class Employee extends Member<EmployeeNumber> {
   }
 }
 
-class Student extends Member<StudentNumber> {
+class Student<T> extends Member<T> {
   #academicRecord: Rank;
 
   constructor(
-    id: StudentNumber,
+    id: T,
     name: string,
     phoneNumber: string,
     email: string,
@@ -134,23 +114,19 @@ class Student extends Member<StudentNumber> {
   }
 }
 
-function printInfo(info: PrintType): void {
-  log(
-    `ID : ${info.id} \nName : ${info.name} \nPhoneNumber : ${info.phoneNumber} \nEmail : ${info.email}`,
-    info instanceof Professor ? `\nLab : ${info.lab}\n` :
-      info instanceof Employee ? `\nOffice : ${info.office}\n` :
-        info instanceof Student ? `\nAcademicRecord : ${info.academicRecord}\n` : "\nERROR\n",
-  );
-}
-
 // function printInfo(info: PrintType): void {
 //   log(
 //     `ID : ${info.id} \nName : ${info.name} \nPhoneNumber : ${info.phoneNumber} \nEmail : ${info.email}`,
-//     'lab' in info ? `\nLab : ${info.lab}` :
-//       'office' in info ? `\nOffice : ${info.office}` :
-//         'academicRecord' in info ? `\nAcademicRecord : ${info.academicRecord}` : "ERROR",
+//     info instanceof Professor ? `\nLab : ${info.lab}\n` :
+//       info instanceof Employee ? `\nOffice : ${info.office}\n` :
+//         info instanceof Student ? `\nAcademicRecord : ${info.academicRecord}\n` : "\nERROR\n",
 //   );
 // }
+
+// instanceof 보다는 in을 활용
+function printInfo<T>(info: PrintType<T>): void {
+  log(info);
+}
 
 const professor = new Professor
 (
@@ -160,6 +136,8 @@ const professor = new Professor
   "Kim@wisoft.io",
   "N5-503",
 );
+
+// console.log(professor.id);
 
 const employee = new Employee
 (
@@ -188,10 +166,18 @@ const student2 = new Student
   "대학원생",
 );
 
-printInfo(professor);
-printInfo(employee);
-printInfo(student);
-printInfo(student2);
+// printInfo(professor);
+// printInfo(employee);
+// printInfo(student);
+// printInfo(student2);
 
-// employee.getInfo()
-// printInfo(employee.getInfo())
+// TypeCasting "as" 활용
+// 먼저 unknown 으로 변환한 후 다시 캐스팅으로 할 것
+printInfo(professor.getInfo() as unknown as PrintType<ProfessorNumber>);
+printInfo(employee.getInfo() as unknown as PrintType<EmployeeNumber>);
+printInfo(student.getInfo() as unknown as PrintType<StudentNumber>);
+printInfo(student2.getInfo() as unknown as PrintType<StudentNumber>);
+
+// Class 구조를 그대로 출력하게됨
+// private 값은 보여지지 않음
+printInfo(professor);
