@@ -1,93 +1,64 @@
 import * as readline from "readline";
+import {menuList} from "./menuList.ts";
 
-const rl = readline.createInterface({
+const log = console.log;
+
+const userInput = readline.createInterface({
   input: process.stdin,
   output: process.stdout,
 });
 
-const log = console.log;
-
-type WON = number;
-
-enum FoodCategory {
-  KOREAN = "KOREAN",
-  JAPANESE = "JAPANESE",
-  CHINESE = "CHINESE",
-  WESTERN = "WESTERN",
-  ITALIAN = "ITALIAN"
-}
-
-type Menu = {
-  category: FoodCategory,
-  name: string,
-  price: WON,
-  detail: string,
-}
-
-const menuList: Menu[] = [
-  {
-    category: FoodCategory.KOREAN,
-    name: "비빔밥",
-    price: 8_000,
-    detail: "비빔밥입니다.",
-  }, {
-    category: FoodCategory.JAPANESE,
-    name: "라멘",
-    price: 8_000,
-    detail: "라멘입니다.",
-  }, {
-    category: FoodCategory.CHINESE,
-    name: "훠궈",
-    price: 8_000,
-    detail: "훠궈입니다.",
-  }, {
-    category: FoodCategory.WESTERN,
-    name: "햄버거",
-    price: 8_000,
-    detail: "햄버거입니다.",
-  }, {
-    category: FoodCategory.ITALIAN,
-    name: "피자",
-    price: 8_000,
-    detail: "피자입니다.",
-  },
-];
-
-function orderView(): void {
+function orderingSystemMainView(): void {
   log("1. 메뉴 확인");
-  log("2. 음식 주문");
+  log("2. 메뉴 주문");
   log("3. 주문 내역 확인");
-  log("4. 주문 완료하기");
+  log("4. 주문 완료하기.");
+  log("5. 프로그램 종료하기.");
 }
 
 function printMenuList(): void {
-  console.log("-- 메뉴 --");
-  let menuNumber = 1;
+  log("-- 메뉴를 확인합니다. --");
+  log("-- 메뉴 --");
 
   for (let menu of menuList) {
-    console.log(`${menuNumber++}. `);
-    console.log("메뉴 이름 : " + menu.name);
-    console.log("메뉴 카테고리 : " + menu.category);
-    console.log("메뉴 가격 : " + menu.price);
-    console.log("메뉴 설명 : " + menu.detail);
-    console.log("-----------------------------------");
+    log("메뉴 이름 : " + menu.name);
+    log("메뉴 카테고리 : " + menu.category);
+    log("메뉴 가격 : " + menu.price);
+    log("메뉴 설명 : " + menu.detail);
+    log("-----------------------------------");
   }
 }
 
-function question(): Promise<string> {
+function pickNumber(): Promise<string> {
   return new Promise((resolve) => {
-    orderView();
-    rl.question("번호를 입력하세요 : ", (answer) => {
+    orderingSystemMainView();
+    userInput.question("번호를 입력하세요 : ", (answer) => {
       resolve(answer);
     });
   });
 }
 
-async function askQuestion(): Promise<void> {
+function pickMenuNumber(): Promise<string> {
+  return new Promise((resolve) => {
+    userInput.question("메뉴 번호를 입력하세요 : ", (menuNumber) => {
+      resolve(menuNumber);
+    });
+  });
+}
+
+function pickMenuCount(): Promise<string> {
+  return new Promise((resolve) => {
+    userInput.question("주문할 갯수를 입력하세요 : ", (menuCount) => {
+      resolve(menuCount);
+    });
+  });
+}
+
+async function orderingSystem(): Promise<void> {
   let answer = "";
 
   while (answer !== "4") {
-    answer = await question();
+    answer = await pickNumber();
 
     switch (answer) {
       case "1":
@@ -99,18 +70,18 @@ async function askQuestion(): Promise<void> {
         break;
 
       case "3":
-        log("Test 3")
+        log("Test 3");
         break;
 
       case "4":
-        rl.close();
+        userInput.close();
         break;
 
-      default:2
+      default:
         log("잘못된 입력");
         break;
     }
   }
 }
 
-askQuestion();
+orderingSystem();
