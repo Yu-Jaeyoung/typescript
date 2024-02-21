@@ -1,5 +1,4 @@
-import {Menu} from "./types.ts";
-import {FoodCategory} from "./enum.ts";
+import {FoodCategory, Menu} from "./types.ts";
 
 export const menuList: Menu[] = [
   {

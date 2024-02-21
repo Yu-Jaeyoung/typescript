@@ -1,3 +1,5 @@
+type WON = number;
+
 export enum FoodCategory {
   KOREAN = "KOREAN",
   JAPANESE = "JAPANESE",
@@ -6,3 +8,9 @@ export enum FoodCategory {
   ITALIAN = "ITALIAN"
 }
 
+export type Menu = {
+  category: FoodCategory,
+  name: string,
+  price: WON,
+  detail: string,
+}

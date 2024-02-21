@@ -1,12 +1,20 @@
-import {menuList} from "./menuList.ts";
+import readline from "readline";
+import {menuList} from "./menu/menuList.ts";
+import {Menu} from "./menu/types.ts";
 
-const log = console.log;
+export const userInput = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout,
+});
 
-function orderMenu() {
-  let menuNum = 1;
-  for (let menus of menuList) {
-    log("메뉴 번호 : ", menuNum++, " 메뉴 이름 : ", menus.name , " 메뉴 가격 : ", menus.price, "원");
-  }
+export function pickNumber(question: string): Promise<string> {
+  return new Promise((resolve) => {
+    userInput.question(question, (number) => {
+      resolve(number);
+    });
+  });
 }
 
-export {orderMenu};
+export function orderedMenu(menuNumber: number): Menu {
+  return menuList[menuNumber - 1];
+}
